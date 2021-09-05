@@ -1,9 +1,34 @@
+import com.google.gson.Gson;
+import lombok.Data;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TreeBuilder {
+    private static final Gson gson = new Gson();
+
+    @Data
+    private static class TreeWrapper {
+        private final TreeDefinition tree;
+    }
+
+    @Data
+    private static class TreeDefinition {
+        private final List<TreeNodeDefinition> nodes;
+        private final String root;
+    }
+
+    @Data
+    private static class TreeNodeDefinition {
+        private final String id;
+        private final String left;
+        private final String right;
+        private final int value;
+    }
+
     public static TreeNode fromJson(String json) {
-        var treeDefinition = TreeDefinition.fromJson(json);
+        var treeDefinition = gson.fromJson(json, TreeWrapper.class).getTree();
 
         var nodes = treeDefinition.getNodes()
             .stream()
